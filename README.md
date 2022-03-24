@@ -1,3 +1,5 @@
+**This is a fork from the original version by doi for personal use only. No public maintainance intended!**
+
 # Auto Time Stamp
 [![Build status](https://ci.appveyor.com/api/projects/status/8jhbugo5d2ejuylh?svg=true)](https://ci.appveyor.com/project/lpubsppop01/vscode-auto-timestamp)
 
