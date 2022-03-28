@@ -2,7 +2,8 @@
 
 import * as vscode from 'vscode';
 import * as fs from 'fs';
-import * as moment from 'moment';
+//import * as moment from 'moment';
+import * as luxon from 'luxon'
 
 export function activate(context: vscode.ExtensionContext) {
     const config = new ExtensionConfiguration();
@@ -30,22 +31,45 @@ class ExtensionCore {
     public onWillSaveTextDocument(e: vscode.TextDocumentWillSaveEvent) {
         if (!e.document.fileName.match(this.m_config.fileNamePattern)) return;
         var edits: vscode.TextEdit[] = [];
+        // Get language ID so we can timestamp TeX files in a smart way
+        const lang_id = e.document.languageId;
+        vscode.window.showInformationMessage(lang_id) //DEBUG
         const lineIndices = this.getIndexRangeUntil(this.m_config.lineLimit, e.document.lineCount);
         for (const iLine of lineIndices) {
             const line = e.document.lineAt(iLine);
 
             const birthTimeRange = this.getTextRangeBetween(line,
-                 this.m_config.birthTimeStart, this.m_config.birthTimeEnd);
+                this.m_config.birthTimeStart, this.m_config.birthTimeEnd);
             if (birthTimeRange != null && birthTimeRange.isEmpty) {
                 const stats = fs.statSync(e.document.fileName);
-                const timeStr = moment(stats.birthtime).format(this.m_config.momentFormat);
+                let timeStr = '-';
+                if (this.m_config.luxonFormat != '') {
+                    timeStr = luxon.DateTime.fromMillis(stats.birthtimeMs).toFormat(this.m_config.luxonFormat);
+                } else {
+                    timeStr = luxon.DateTime.fromMillis(stats.birthtimeMs).toISO();
+                }
                 edits.push(vscode.TextEdit.replace(birthTimeRange, timeStr));
+            }
+
+            // Insert the TeX command for the birth date if a TeX file
+            if (lang_id == 'tex' || lang_id == 'latex' || lang_id == 'doctex') {
+                const texTimeRange = this.getTextRange(line, this.m_config.texPlaceholder);
+                if (texTimeRange != null ) {
+                    const stats = fs.statSync(e.document.fileName);
+                    const timeStr = luxon.DateTime.fromMillis(stats.birthtimeMs).toFormat(this.m_config.texFormat);
+                    edits.push(vscode.TextEdit.replace(texTimeRange, timeStr));
+                }
             }
 
             const modifiedTimeRange = this.getTextRangeBetween(line,
                  this.m_config.modifiedTimeStart, this.m_config.modifiedTimeEnd);
             if (modifiedTimeRange != null) {
-                const timeStr = moment().format(this.m_config.momentFormat);
+                let timeStr = '-';
+                if (this.m_config.luxonFormat != '') {
+                    timeStr = luxon.DateTime.now().toFormat(this.m_config.luxonFormat);
+                } else {
+                    timeStr = luxon.DateTime.now().toISO();
+                }
                 edits.push(vscode.TextEdit.replace(modifiedTimeRange, timeStr));
             }
         }
@@ -74,9 +98,19 @@ class ExtensionCore {
         const startResult = line.text.match(startPattern);
         if (startResult == null) return null;
         const iRangeStart = startResult.index + startResult[0].length;
-        const endResult = line.text.substr(iRangeStart).match(endPattern);
+        const endResult = line.text.substring(iRangeStart).match(endPattern);
         if (endResult == null) return null;
         const iRangeEnd = iRangeStart + endResult.index;
+        const startPos = new vscode.Position(line.lineNumber, iRangeStart);
+        var endPos = new vscode.Position(line.lineNumber, iRangeEnd);
+        return new vscode.Range(startPos, endPos);
+    }
+
+    private getTextRange(line: vscode.TextLine, pattern: RegExp): vscode.Range {
+        const startResult = line.text.match(pattern);
+        if (startResult == null) return null;
+        const iRangeStart = startResult.index;
+        const iRangeEnd = iRangeStart + startResult[0].length;
         const startPos = new vscode.Position(line.lineNumber, iRangeStart);
         var endPos = new vscode.Position(line.lineNumber, iRangeEnd);
         return new vscode.Range(startPos, endPos);
@@ -89,16 +123,17 @@ class ExtensionConfiguration {
     private m_config: vscode.WorkspaceConfiguration;
 
     public constructor() {
-        this.m_config = vscode.workspace.getConfiguration("lpubsppop01.autoTimeStamp");
+        this.m_config = vscode.workspace.getConfiguration("hseliger.autoTimeStamp");
     }
 
     public onDidChangeConfiguration() {
-        this.m_config = vscode.workspace.getConfiguration("lpubsppop01.autoTimeStamp");
+        this.m_config = vscode.workspace.getConfiguration("hseliger.autoTimeStamp");
         this.m_fileNamePattern = null;
         this.m_birthTimeStart = null;
         this.m_birthTimeEnd = null;
         this.m_modifiedTimeStart = null;
         this.m_modifiedTimeEnd = null;
+        this.m_texPlaceholder = null;
     }
 
     private getValue<T>(propertyName: string, defaultValue: T): T {
@@ -151,8 +186,21 @@ class ExtensionConfiguration {
         return this.m_modifiedTimeEnd;
     }
 
-    public get momentFormat(): string {
-        return this.getValue<string>("momentFormat", "YYYY/MM/DD HH:mm:ss");
+    public get luxonFormat(): string {
+        return this.getValue<string>("luxonFormat", "yyyy/MM/dd HH:mm:ss");
     }
+
+    private m_texPlaceholder: RegExp;
+    public get texPlaceholder(): RegExp {
+        if (this.m_texPlaceholder == null) {
+            this.m_texPlaceholder = new RegExp(this.getValue<string>("texPlaceholder", "XXX-DATE-WHEN-CREATED-XXX"));
+        }
+        return this.m_texPlaceholder;
+    }
+
+    public get texFormat(): string {
+        return this.getValue<string>("texFormat", "'\\DTMdate{'yyyy-MM-dd'}'");
+    }
+
 
 }

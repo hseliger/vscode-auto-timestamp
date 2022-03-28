@@ -29,40 +29,50 @@
                 "title": "Auto Time Stamp",
                 "type": "object",
                 "properties": {
-                    "lpubsppop01.autoTimeStamp.filenamePattern": {
+                    "hseliger.autoTimeStamp.filenamePattern": {
                         "description": "%filenamePattern.description%",
                         "type": "string",
                         "default": ".*"
                     },
-                    "lpubsppop01.autoTimeStamp.lineLimit": {
+                    "hseliger.autoTimeStamp.lineLimit": {
                         "description": "%lineLimit.description%",
                         "type": "integer",
                         "default": 5
                     },
-                    "lpubsppop01.autoTimeStamp.birthTimeStart": {
+                    "hseliger.autoTimeStamp.birthTimeStart": {
                         "description": "%birthTimeStart.description%",
                         "type": "string",
                         "default": "[cC]reated *: "
                     },
-                    "lpubsppop01.autoTimeStamp.birthTimeEnd": {
+                    "hseliger.autoTimeStamp.birthTimeEnd": {
                         "description": "%birthTimeEnd.description%",
                         "type": "string",
                         "default": "$"
                     },
-                    "lpubsppop01.autoTimeStamp.modifiedTimeStart": {
+                    "hseliger.autoTimeStamp.modifiedTimeStart": {
                         "description": "%modifiedTimeStart.description%",
                         "type": "string",
                         "default": "[lL]ast[ -][mM]odified *: "
                     },
-                    "lpubsppop01.autoTimeStamp.modifiedTimeEnd": {
+                    "hseliger.autoTimeStamp.modifiedTimeEnd": {
                         "description": "%modifiedTimeEnd.description%",
                         "type": "string",
                         "default": "$"
                     },
-                    "lpubsppop01.autoTimeStamp.momentFormat": {
-                        "description": "%momentFormat.description%",
+                    "hseliger.autoTimeStamp.luxonFormat": {
+                        "description": "%luxonFormat.description%",
                         "type": "string",
                         "default": "YYYY/MM/DD HH:mm:ss"
+                    },
+                    "hseliger.autoTimeStamp.texPlaceholder": {
+                        "description": "%texPlaceholder.description%",
+                        "type": "string",
+                        "default": "XXX-DATE-WHEN-CREATED-XXX"
+                    },
+                    "hseliger.autoTimeStamp.texFormat": {
+                        "description": "%texFormat.description%",
+                        "type": "string",
+                        "default": "'\\DTMdate{'yyyy-MM-dd'}'"
                     }
                 }
             }
@@ -76,6 +86,7 @@
         "vsce-package": "vsce package"
     },
     "devDependencies": {
+        "@types/luxon": "^2.3.1",
         "@types/mocha": "^8.2.2",
         "@types/node": "^15.0.1",
         "@types/vscode": "^1.18.0",
@@ -85,6 +96,7 @@
         "vso-node-api": "6.5.0"
     },
     "dependencies": {
+        "luxon": "^2.3.1",
         "moment": "^2.29.1"
     }
 }

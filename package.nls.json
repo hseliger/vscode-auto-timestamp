@@ -5,5 +5,7 @@
     "birthTimeEnd.description": "Configure regular expression that preceding of matched part will be treated as birth time field.",
     "modifiedTimeStart.description": "Configure regular expression that following of matched part will be treated as modified time field.",
     "modifiedTimeEnd.description": "Configure regular expression that preceding of matched part will be treated as modified time field.",
-    "momentFormat.description": "Moment.js format string for birth time and modified time."
+    "luxonFormat.description": "luxon.js format string for birth time and modified time.",
+    "texPlaceholder.description": "String replaced my a date command inside TeX files.",
+    "texFormat": "Date command to put into a TeX file to set the date of writing."
 }
