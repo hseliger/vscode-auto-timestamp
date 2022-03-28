@@ -46,7 +46,7 @@ class ExtensionCore {
                 } else {
                     timeStr = luxon.DateTime.fromMillis(stats.birthtimeMs).toISO();
                 }
-                edits.push(vscode.TextEdit.replace(birthTimeRange, timeStr));
+                edits.push(vscode.TextEdit.replace(birthTimeRange, timeStr+this.m_config.tsSuffix));
             }
 
             // Insert the TeX command for the birth date if a TeX file
@@ -68,7 +68,7 @@ class ExtensionCore {
                 } else {
                     timeStr = luxon.DateTime.now().toISO();
                 }
-                edits.push(vscode.TextEdit.replace(modifiedTimeRange, timeStr));
+                edits.push(vscode.TextEdit.replace(modifiedTimeRange, timeStr+this.m_config.tsSuffix));
             }
         }
         e.waitUntil(Promise.resolve(edits));
@@ -186,6 +186,10 @@ class ExtensionConfiguration {
 
     public get luxonFormat(): string {
         return this.getValue<string>("luxonFormat", "yyyy/MM/dd HH:mm:ss");
+    }
+
+    public get tsSuffix(): string {
+        return this.getValue<string>("suffix", " by "+process.env.USER);
     }
 
     private m_texPlaceholder: RegExp;

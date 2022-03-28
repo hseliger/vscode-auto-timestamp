@@ -7,5 +7,6 @@
     "modifiedTimeEnd.description": "Configure regular expression that preceding of matched part will be treated as modified time field.",
     "luxonFormat.description": "luxon.js format string for birth time and modified time.",
     "texPlaceholder.description": "String replaced my a date command inside TeX files.",
-    "texFormat.description": "Date command to put into a TeX file to set the date of writing."
+    "texFormat.description": "Date command to put into a TeX file to set the date of writing.",
+    "suffix.description": "Suffix to add to timestamps. Will default to 'by ' and current user name"
 }
