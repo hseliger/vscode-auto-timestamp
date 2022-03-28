@@ -32,7 +32,6 @@ class ExtensionCore {
         var edits: vscode.TextEdit[] = [];
         // Get language ID so we can timestamp TeX files in a smart way
         const lang_id = e.document.languageId;
-        vscode.window.showInformationMessage(lang_id) //DEBUG
         const lineIndices = this.getIndexRangeUntil(this.m_config.lineLimit, e.document.lineCount);
         for (const iLine of lineIndices) {
             const line = e.document.lineAt(iLine);
