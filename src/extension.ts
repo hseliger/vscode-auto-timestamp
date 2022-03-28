@@ -203,6 +203,4 @@ class ExtensionConfiguration {
     public get texFormat(): string {
         return this.getValue<string>("texFormat", "'\\DTMdate{'yyyy-MM-dd'}'");
     }
-
-
 }

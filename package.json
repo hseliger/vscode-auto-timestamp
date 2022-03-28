@@ -64,7 +64,7 @@
                         "type": "string",
                         "default": "YYYY/MM/DD HH:mm:ss"
                     },
-                    "hseliger.y.suffix": {
+                    "hseliger.suffix": {
                         "description": "%suffix.description%",
                         "type": "string",
                         "default": ""
@@ -92,7 +92,6 @@
     },
     "devDependencies": {
         "@types/luxon": "^2.3.1",
-        "@types/mocha": "^8.2.2",
         "@types/node": "^15.0.1",
         "@types/vscode": "^1.18.0",
         "typescript": "^4.2.4",
