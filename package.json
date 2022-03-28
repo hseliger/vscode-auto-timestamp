@@ -64,7 +64,7 @@
                         "type": "string",
                         "default": "YYYY/MM/DD HH:mm:ss"
                     },
-                    "hseliger.suffix": {
+                    "hseliger.autoTimeStamp.suffix": {
                         "description": "%suffix.description%",
                         "type": "string",
                         "default": ""
