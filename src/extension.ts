@@ -2,8 +2,7 @@
 
 import * as vscode from 'vscode';
 import * as fs from 'fs';
-//import * as moment from 'moment';
-import * as luxon from 'luxon'
+import * as luxon from 'luxon';
 
 export function activate(context: vscode.ExtensionContext) {
     const config = new ExtensionConfiguration();
